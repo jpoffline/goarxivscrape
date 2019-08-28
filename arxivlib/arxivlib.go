@@ -2,7 +2,6 @@ package arxivlib
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -35,6 +34,17 @@ func (as *Articles) attachCodes(c []ArticleMeta) {
 	for i := range as.articles {
 		as.articles[i].addMeta(c[i])
 	}
+}
+
+// Len will return the number of articles.
+func (as *Articles) Len() int {
+	return len(as.articles)
+}
+
+// Overview will print meta data about all the articles
+// (count etc).
+func (as *Articles) Overview() {
+	fmt.Printf("Number of articles: %q", as.Len())
 }
 
 // Print will pretty print the articles info
@@ -80,25 +90,27 @@ func pullArticles(document *goquery.Document) (Articles, error) {
 	return ScrapedArticles, nil
 }
 
-func ScrapeForArticles(url string) Articles {
+// ScrapeForArticles will return the provided URL for
+// Articles.
+func ScrapeForArticles(url string) (Articles, error) {
 	response, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
+		return Articles{}, fmt.Errorf(err.Error())
 	}
 	defer response.Body.Close()
 
 	// Create a goquery document from the HTTP response
 	document, err := goquery.NewDocumentFromReader(response.Body)
 	if err != nil {
-		log.Fatal("Error loading HTTP response body. ", err)
+		return Articles{}, fmt.Errorf("Error loading HTTP response body: %s ", err)
 	}
 
 	ScrapedArticles, err := pullArticles(document)
 	if err != nil {
-		log.Fatal("Error scraping articles from body. ", err)
+		return Articles{}, fmt.Errorf("Error scraping articles from body: %s", err)
 	}
 	arxivs := pullArxivCodes(document)
 
 	ScrapedArticles.attachCodes(arxivs)
-	return ScrapedArticles
+	return ScrapedArticles, nil
 }
