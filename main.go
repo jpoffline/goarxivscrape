@@ -3,10 +3,16 @@ package main
 
 import (
 	"arxiv/arxivlib"
+	"flag"
 )
 
 func main() {
 	// Make HTTP request
-	arts := arxivlib.ScrapeForArticles("https://arxiv.org/list/hep-th/pastweek?skip=0&show=50")
+
+	arxivType := flag.String("arxiv", "hep-th", "which arxiv")
+	flag.Parse()
+
+	arts, _ := arxivlib.ScrapeForArticles("https://arxiv.org/list/" + *arxivType + "/pastweek?skip=0&show=50")
 	arts.Print()
+	arts.Overview()
 }
