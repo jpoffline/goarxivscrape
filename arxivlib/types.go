@@ -1,17 +1,17 @@
 package arxivlib
 
 type Articles struct {
-	articles []*Article
+	Arts []Article `json:"articles"`
 }
 
 type Article struct {
-	Title    string
-	Authors  []string
-	Category string
-	Meta     ArticleMeta
+	Title    string      `json:"title"`
+	Authors  []string    `json:"authors"`
+	Category string      `json:"category"`
+	Meta     ArticleMeta `json:"meta"`
 }
 
 type ArticleMeta struct {
-	Code    string
-	PdfLink string
+	Code    string `json:"code"`
+	PdfLink string `json:"pdf"`
 }

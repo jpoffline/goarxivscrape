@@ -15,4 +15,5 @@ func main() {
 	arts, _ := arxivlib.ScrapeForArticles("https://arxiv.org/list/" + *arxivType + "/pastweek?skip=0&show=50")
 	arts.Print()
 	arts.Overview()
+	arts.ToJSON("arts.json")
 }
