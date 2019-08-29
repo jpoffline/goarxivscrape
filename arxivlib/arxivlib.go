@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 )
 
-func NewArticle(t string, aut []string, cat string) Article {
+func newArticle(t string, aut []string, cat string) Article {
 	return Article{Title: t, Authors: aut, Category: cat}
 }
 
-func NewArticleMeta(c, p string) ArticleMeta {
+func newArticleMeta(c, p string) ArticleMeta {
 	return ArticleMeta{Code: c, PdfLink: p}
 }
 
