@@ -3,6 +3,7 @@ package arxivlib
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -38,7 +39,12 @@ func pullArticles(document *goquery.Document) (Articles, error) {
 			var authors []string
 			element.Find(".list-authors").Find("a").Each(func(index int, element *goquery.Selection) { authors = append(authors, element.Text()) })
 			cleantitle := strings.TrimSpace(strings.Replace(title.Text(), "Title: ", "", -1))
-			art := newArticle(cleantitle, authors, category.Text())
+			catFull := category.Text()
+			r := regexp.MustCompile(`\((.*?)\)`)
+			match := r.FindStringSubmatch(catFull)
+			catFull = match[1]
+
+			art := newArticle(cleantitle, authors, catFull)
 			ScrapedArticles.addArticle(art)
 		})
 	})
